@@ -35,5 +35,4 @@ jobs:
               --dry-run
             )
         
-          fi
           sf project deploy start "${deployFlags[@]}"
