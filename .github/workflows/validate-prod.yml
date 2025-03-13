@@ -10,6 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: 'Create delta packages for new, modified or deleted metadata'
+        run: |
+         mkdir changed-sources
+         sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
+
       - name: Validate on Production
         uses: jawills/sf-deploy@v1.0
         with:
