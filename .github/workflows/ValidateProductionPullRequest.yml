@@ -1,4 +1,4 @@
-name: Validate ${{ vars.ENVIRONMENT_NAME }} Pull Request
+name: Validate Production Pull Request
 
 on:
   pull_request:
