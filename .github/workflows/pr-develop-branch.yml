@@ -4,8 +4,7 @@ name: validate pull request on develop branch
 # Define when the workflow should run
 on:
   # Trigger the workflow when a push is made to the develop branch
-  pull_request:
-    types: [opened, synchronize]
+  push:
     branches: [develop]
     paths:
       - 'force-app/**'
