@@ -1,7 +1,7 @@
 name: Validate Production Pull Request
 
 on:
-  pull_request:
+  push:
     branches:
       - master
     paths:
@@ -11,13 +11,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install sfdxGit delta
+      - name: Install Salesforce CLI
+        shell: bash
         run: |
-          echo y | sfdx plugins:install sfdx-git-delta
-          sfdx sgd:source:delta --to "HEAD" --from "HEAD^"  --ignore ignorefile --output "."
-          cat package/package.xml
-      - name: Validate on ${{ vars.ENVIRONMENT_NAME }}
-        uses: jawills/sf-deploy@v1.0
-        with:
-          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
-          DRY_RUN: true
+          npm install -g @salesforce/cli
+          sf --version
+      - name: Login to Environment
+        shell: bash
+        run: |
+          sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ secrets.SFDX_AUTH_URL }}")
+      - name: Generate package.xml
+        shell: bash
+        run: |
+          sf project generate manifest --source-dir force-app --output-dir manifest
+      - name: Deploy to Environment
+        shell: bash
+        run: |
+          deployFlags=(
+              --manifest manifest/package.xml
+              --wait 30
+              --test-level RunLocalTests
+              --verbose
+              --dry-run
+            )
+        
+          fi
+          sf project deploy start "${deployFlags[@]}"
