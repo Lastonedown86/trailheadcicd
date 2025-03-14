@@ -26,16 +26,9 @@ jobs:
           sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ secrets.SFDX_AUTH_URL }}")
       - name: 'Generate package.xml'
         run: |
-          sf sgd source delta --to "HEAD" --from "origin/master" --output-dir .
+          mkdir changed-sources
+          sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output-dir changed-sources/ --generate-delta --source-dir force-app/
       - name: Deploy to Environment
         shell: bash
         run: |
-          deployFlags=(
-              --manifest package/package.xml
-              --wait 30
-              --test-level RunLocalTests
-              --verbose
-              --dry-run
-            )
-        
-          sf project deploy start "${deployFlags[@]}"
+          sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunLocalTests  --json
