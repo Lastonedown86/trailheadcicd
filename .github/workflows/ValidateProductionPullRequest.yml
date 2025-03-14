@@ -32,7 +32,7 @@ jobs:
          git fetch origin "+refs/heads/*:refs/remotes/origin/*"
       - name: 'Generate package.xml'
         run: |
-          sfdx sgd:source:delta --to "HEAD" --from $(git merge-base HEAD origin/develop) --output . -i .gitignore
+          sfdx sgd:source:delta --to "HEAD" --from origin/develop --output . -i .gitignore
       - name: Deploy to Environment
         shell: bash
         run: |
