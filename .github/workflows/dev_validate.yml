@@ -1,6 +1,6 @@
 name: SFDX-CLI DEV Validate from Repository
 on:
-  pull_request:
+  push:
     branches:
       - develop
     paths:
