@@ -14,7 +14,8 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           # Fetch all history commit
           fetch-depth: 0
-      - run: npm install sfdx-cli --location=global
+      - run: npm install -g @salesforce/cli
+          sf --version
       - run: echo 'y' | sfdx plugins:install sfdx-git-delta
       - run: sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ secrets.SFDX_AUTH_URL }}")
       - run: git fetch origin "+refs/heads/*:refs/remotes/origin/*"
