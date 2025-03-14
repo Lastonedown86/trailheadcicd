@@ -32,4 +32,4 @@ jobs:
       - name: Deploy to Environment
         shell: bash
         run: |
-          sf project  deploy validate  -x ./output/package/package.xml -l RunLocalTests -o
+          sf project  deploy validate  -x ./output/package/package.xml -l RunLocalTests -o trailhead --wait 10
