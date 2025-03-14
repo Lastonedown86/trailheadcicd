@@ -28,16 +28,8 @@ jobs:
           sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ secrets.SFDX_AUTH_URL }}")
       - name: 'Generate package.xml'
         run: |
-          sf sgd source delta --to "HEAD" --from "${{ github.sha }}" --output-dir .
+          sf sgd source delta --to HEAD --from origin/master --output-dir .
       - name: Deploy to Environment
         shell: bash
         run: |
-          deployFlags=(
-              --manifest package/package.xml
-              --wait 30
-              --test-level RunLocalTests
-              --verbose
-              --dry-run
-            )
-        
-          sf project deploy start "${deployFlags[@]}"
+          sf project  deploy validate  -x ./output/package/package.xml -l RunLocalTests -o
