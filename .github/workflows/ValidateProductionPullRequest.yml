@@ -9,8 +9,9 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    environment: production
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.1.7
         with:
           fetch-depth: 0
       - name: Install Salesforce CLI
@@ -20,8 +21,8 @@ jobs:
           sf --version
       - name: 'Installing sfdx git delta'
         run: | 
-          echo y | sfdx plugins:install sfdx-git-delta
-          sfdx plugins
+          echo y | sf plugins install sfdx-git-delta
+          sf plugins
       - name: 'Login to Environment'
         shell: bash
         run: |
@@ -32,7 +33,7 @@ jobs:
       - name: 'Generate package.xml'
         run: |
           mkdir changed-sources
-          sfdx sgd:source:delta --from "HEAD~1" --output changed-sources/ --generate-delta --source force-app/
+          sf sgd:source:delta --from "HEAD~1" --output-dir changed-sources/ --generate-delta --source-dir force-app/
       - name: Deploy to Environment
         shell: bash
         run: |
