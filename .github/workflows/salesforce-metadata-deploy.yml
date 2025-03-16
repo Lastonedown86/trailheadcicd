@@ -1,5 +1,5 @@
 name: Salesforce Metadata Deploy
-
+description: Builds and deploys metadata to a specified environment
 inputs:
   DRY_RUN:
     description: "Validate deploy and run Apex tests but don't save to the org."
