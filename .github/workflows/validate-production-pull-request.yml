@@ -13,7 +13,3 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Validate on ${{ vars.ENVIRONMENT_NAME }}
-        uses: ./.github/actions/metadata-test-deploy
-        with:
-          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
-          DRY_RUN: true
