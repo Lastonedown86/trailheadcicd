@@ -21,10 +21,10 @@ inputs:
      description: "Path to the local source files to deploy."
      type: string
      default: force-app
-   SFDX_AUTH_URL:
-     description: "The auth url tied to your deployment environment"
-     type: string
-     required: true
+  SFDX_AUTH_URL:
+    description: "The auth url tied to your deployment environment"
+    type: string
+    required: true
 
 
 
