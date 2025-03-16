@@ -27,6 +27,7 @@ inputs:
     required: true
 
 runs:
+  using: "composite"
   steps:
     - name: Install Salesforce CLI
       shell: bash
