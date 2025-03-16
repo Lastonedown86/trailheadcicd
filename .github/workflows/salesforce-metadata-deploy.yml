@@ -1,5 +1,7 @@
 name: Salesforce Metadata Deploy
 
+workflow_dispatch:
+  
 inputs:
   DRY_RUN:
     description: "Validate deploy and run Apex tests but don't save to the org."
