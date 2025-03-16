@@ -1,4 +1,3 @@
-name: Metadata Deploy
 description: Builds and deploys metadata to a specified environment
 inputs:
   DRY_RUN:
