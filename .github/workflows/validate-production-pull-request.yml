@@ -1,4 +1,4 @@
-name: Validate Production Pull Request
+name: Open Pull Request Validation
 
 on:
   pull_request:
