@@ -1,0 +1,71 @@
+name: Validate Deployment
+
+on:
+  workflow_call:
+    inputs:
+      environment-name:
+        description: "The name of the environment"
+        required: true
+        type: string
+      test-level:
+        description: "Deployment Apex testing level."
+        type: choice
+        default: RunLocalTests
+        options:
+          - NoTestRun
+          - RunSpecifiedTests
+          - RunLocalTests
+          - RunAllTestsInOrg
+      sfdx_auth_url:
+        description: "The auth url tied to your deployment environment"
+        type: string
+        required: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+  steps:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install Salesforce CLI
+        run: |
+          npm install @salesforce/cli --global
+
+      - name: "Installing sfdx git delta"
+        run: |
+          echo y | sf plugins install sfdx-git-delta
+          sf plugins
+
+      - name: "Authenticate to UAT Org"
+        run: |
+          sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ secrets.SFDX_AUTH_URL }}")
+
+      - name: "Create delta packages for new, modified or deleted metadata"
+        run: |
+          mkdir changed-sources
+          sf sgd:source:delta --from "HEAD~1" --output-dir changed-sources/ --generate-delta --source-dir force-app/
+
+      - name: "Upload changed-sources folder as artifact"
+        uses: actions/upload-artifact@v4
+        with:
+          name: changed-sources
+          path: changed-sources
+      - name: "Validate Changes"
+        run: |
+          deployFlags=(
+              --manifest changed-sources/package/package.xml
+              --post-destructive-changes changed-sources/destructiveChanges/destructiveChanges.xml
+              --test-level ${{ inputs.test-level }}
+              --verbose
+            )
+          sf project validate start "${deployFlags[@]}"
