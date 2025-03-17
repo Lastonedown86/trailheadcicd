@@ -1,23 +1,28 @@
-name: Echo message
+name: Run Environment Tests
 on:
   workflow_dispatch:
     inputs:
-      hubAddressGroupObject:
+      environment:
         type: choice
-        description: 'Enter the name of the hub where the entry is added'
+        description: 'Environment'
         required: true
-        default: 'AZURE-EUW-XXXXX'
         options:
-          - 'AZURE-EUW-XXXXX'
-          - 'AZURE-FRC-XXXXX'
-          - 'AZURE-USE-XXXXX'
-          - 'AZURE-FRC-XXXXX'
+          - 'production'
+      test-level:
+        type: choice
+        description: 'Test Level'
+        options:
+          - RunAllTestsInOrg
 
 jobs:
-  build:
+  validate:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
-      - uses: actions/checkout@v2
-      - name: WriteMessage
-        run: |
-          echo "${{ github.event.inputs.hubAddressGroupObject }}"
+      - uses: actions/checkout@v4
+      - name: Running ${{ inputs.test-level}} on ${{ vars.ENVIRONMENT_NAME }}
+        uses: ./.github/actions/validate-and-deploy
+        with:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+          TEST_LEVEL: ${{ inputs.test-level }}
+          DRY_RUN: true
