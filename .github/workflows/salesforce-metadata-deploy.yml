@@ -3,18 +3,18 @@ name: Salesforce Metadata Deploy
 on:
   workflow_call:
     inputs:
-      dry-run:
+      DRY_RUN:
         description: "Validate deploy and run Apex tests but don't save to the org."
         type: boolean
-      wait:
+      WAIT:
         description: "Number of minutes to wait for command to complete and display results."
         type: number
         default: 30
-      environment-name:
-        description: "Environment Name"
-        required: true
+      SFDX_AUTH_URL:
+        description: "The auth url tied to your deployment environment"
         type: string
-      test-level:
+        required: true
+      TEST_LEVEL:
         description: "Deployment Apex testing level."
         type: string
         default: RunLocalTests
@@ -22,8 +22,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: ${{ inputs.environment-name }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -45,7 +43,7 @@ jobs:
           sf plugins
 
       - name: Authenticate to Org
-        run: sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ secrets.sfdx-auth-url }}")
+        run: sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ inputs.SFDX_AUTH_URL }}")
 
       - name: Create delta packages for new, modified or deleted metadata
         run: |
@@ -63,10 +61,10 @@ jobs:
           deployFlags=(
             --manifest changed-sources/package/package.xml
             --post-destructive-changes changed-sources/destructiveChanges/destructiveChanges.xml
-            --wait ${{ inputs.wait }}
-            --test-level ${{ inputs.test-level }}
+            --wait ${{ inputs.WAIT }}
+            --test-level ${{ inputs.TEST_LEVEL }}
             --verbose
             )
-          if [ "${{ inputs.dry-run }}" = "true" ]; then
+          if [ "${{ inputs.DRY_RUN }}" = "true" ]; then
              deployFlags+=( --dry-run )
           sf project deploy start "${deployFlags[@]}"
