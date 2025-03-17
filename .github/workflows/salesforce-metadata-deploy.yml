@@ -14,10 +14,6 @@ on:
         description: "Environment Name"
         required: true
         type: string
-      sfdx-auth-url:
-        description: "SFDX Auth Url"
-        required: true
-        type: string
       test-level:
         description: "Deployment Apex testing level."
         type: choice
@@ -53,7 +49,7 @@ jobs:
           sf plugins
 
       - name: Authenticate to Org
-        run: sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ inputs.sfdx-auth-url }}")
+        run: sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ secrets.sfdx-auth-url }}")
 
       - name: Create delta packages for new, modified or deleted metadata
         run: |
