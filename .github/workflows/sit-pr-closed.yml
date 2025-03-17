@@ -3,20 +3,22 @@ name: Deploy to SIT
 on:
   pull_request:
     types: [closed]
+    branches:
+      - sit
 
 jobs:
-  if: github.event.pull_request.merged == true
   deploy:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment:
       name: sit
     steps:
-      - name: Checkout code
+      - name: "Checkout code"
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Set up Node.js
+      - name: "Set up Node.js"
         uses: actions/setup-node@v4
         with:
           node-version: lts/*

@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - sit
-
 jobs:
   validate:
     runs-on: ubuntu-latest
