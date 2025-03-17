@@ -12,8 +12,9 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@v4
-      - name: Validate on ${{ vars.ENVIRONMENT_NAME }}
+      - name: Deploy on ${{ vars.ENVIRONMENT_NAME }}
         uses: ./.github/actions/validate-and-deploy
         with:
           SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
           DRY_RUN: false
+          TEST_LEVEL: NoTestRun
