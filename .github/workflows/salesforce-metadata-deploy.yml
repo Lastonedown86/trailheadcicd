@@ -16,13 +16,9 @@ on:
         type: string
       test-level:
         description: "Deployment Apex testing level."
-        type: choice
+        type: string
         default: RunLocalTests
-        options:
-          - NoTestRun
-          - RunSpecifiedTests
-          - RunLocalTests
-          - RunAllTestsInOrg
+
 jobs:
   validate:
     runs-on: ubuntu-latest
