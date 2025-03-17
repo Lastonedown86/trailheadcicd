@@ -8,7 +8,7 @@ on:
       - master
 
 jobs:
-  validate-production-push:
+  deploy-production-merge:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment:
@@ -42,7 +42,12 @@ jobs:
           mkdir changed-sources
           sf sgd:source:delta --from "HEAD~1" --output-dir changed-sources/ --generate-delta --source-dir force-app/
 
-      - name: "Run validation"
+      - name: "Deploy to Production"
         run: |
-          sf project deploy validate --manifest changed-sources/package/package.xml --post-destructive-changes changed-sources/destructiveChanges/destructiveChanges.xml --test-level RunLocalTests --verbose
-
+          deployFlags=(
+              --manifest changed-sources/package/package.xml
+              --post-destructive-changes changed-sources/destructiveChanges/destructiveChanges.xml
+              --test-level RunLocalTests
+              --verbose
+            )
+          sf project deploy start "${deployFlags[@]}"
