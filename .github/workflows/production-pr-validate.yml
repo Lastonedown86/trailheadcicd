@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - 'force-app/**'
+
 jobs:
   validate:
     runs-on: ubuntu-latest
