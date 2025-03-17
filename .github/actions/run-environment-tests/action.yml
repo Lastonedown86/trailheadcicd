@@ -1,0 +1,44 @@
+name: "Environment Tests"
+description: "Composite action to run environment tests"
+
+inputs:
+  TEST_LEVEL:
+    description: "Deployment Apex testing level."
+  WAIT:
+    description: "Number of minutes to wait for command to complete and display results."
+    default: "10"
+  SFDX_AUTH_URL:
+    description: "The auth url tied to your deployment environment"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    - name: Install Salesforce CLI
+      shell: bash
+      run: |
+        npm install -g @salesforce/cli
+        sf --version
+    - name: Login to Environment
+      shell: bash
+      run: |
+        sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ inputs.SFDX_AUTH_URL }}")
+    - name: Run test in Environment
+      shell: bash
+      run: |
+        mkdir test-results
+        deployFlags=(
+          --synchronous 
+          --test-level ${{ inputs.TEST_LEVEL }}
+          --output-dir test-results 
+          )
+        
+        sf apex run test "${deployFlags[@]}"

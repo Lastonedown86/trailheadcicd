@@ -1,0 +1,27 @@
+name: Run Environment Tests
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: 'Environment'
+        required: true
+        options:
+          - 'production'
+      test-level:
+        type: choice
+        description: 'Test Level'
+        options:
+          - RunAllTestsInOrg
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Running ${{ inputs.test-level}} on ${{ vars.ENVIRONMENT_NAME }}
+        uses: ./.github/actions/run-environment-tests
+        with:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+          TEST_LEVEL: ${{ inputs.test-level }}
