@@ -9,9 +9,7 @@ inputs:
     default: RunLocalTests
   WAIT:
     description: "Number of minutes to wait for command to complete and display results."
-  SOURCE_DIRECTORY:
-    description: "Path to the local source files to deploy."
-    default: force-app
+    default: "10"
   SFDX_AUTH_URL:
     description: "The auth url tied to your deployment environment"
     required: true
@@ -24,24 +22,35 @@ runs:
       run: |
         npm install -g @salesforce/cli
         sf --version
+    - name: Installing sfdx git delta
+      shell: bash
+      run: |
+        echo y | sf plugins install sfdx-git-delta
+        sf plugins
     - name: Login to Environment
       shell: bash
       run: |
         sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ inputs.SFDX_AUTH_URL }}")
-    - name: Generate package.xml
+    - name: Create delta packages for new, modified or deleted metadata
       shell: bash
       run: |
-        sf project generate manifest --source-dir ${{ inputs.SOURCE_DIRECTORY }} --output-dir manifest
+        mkdir changed-sources
+        sf sgd:source:delta --from "HEAD~1" --output-dir changed-sources/ --generate-delta --source-dir force-app/
+    - name: Upload changed-sources folder as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: changed-sources
+        path: changed-sources
     - name: Deploy to Environment
       shell: bash
       run: |
         deployFlags=(
-            --manifest manifest/package.xml
-            --wait ${{ inputs.WAIT }}
-            --test-level ${{ inputs.TEST_LEVEL }}
-            --verbose
+          --manifest changed-sources/package/package.xml
+          --post-destructive-changes changed-sources/destructiveChanges/destructiveChanges.xml
+          --wait ${{ inputs.WAIT }}
+          --test-level ${{ inputs.TEST_LEVEL }}
+          --verbose
           )
         if [ "${{ inputs.DRY_RUN }}" = "true" ]; then
-          deployFlags+=( --dry-run )
-        fi
+           deployFlags+=( --dry-run )
         sf project deploy start "${deployFlags[@]}"
