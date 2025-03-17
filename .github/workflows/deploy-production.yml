@@ -6,8 +6,6 @@ on:
     branches:
       - main
       - master
-    paths:
-      - 'force-app/**'
 jobs:
   deploy:
     if: github.event.pull_request.merged == true

@@ -5,8 +5,6 @@ on:
     types: [closed]
     branches:
       - uat
-    paths:
-      - 'force-app/**'
 jobs:
   deploy:
     if: github.event.pull_request.merged == true
