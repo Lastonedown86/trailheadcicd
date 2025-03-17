@@ -1,0 +1,22 @@
+name: Deploy To Production
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+      - master
+    paths:
+      - 'force-app/**'
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate on ${{ vars.ENVIRONMENT_NAME }}
+        uses: ./.github/actions/validate-and-deploy
+        with:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+          DRY_RUN: false
