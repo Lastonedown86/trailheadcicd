@@ -4,6 +4,7 @@ on:
   pull_request:
     types: [closed]
 
+
 jobs:
   if: github.event.pull_request.merged == true
   deploy:
