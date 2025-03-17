@@ -39,6 +39,6 @@ runs:
           --synchronous 
           --test-level ${{ inputs.TEST_LEVEL }}
           --output-dir test-results 
-          --verbose
           )
+        
         sf apex run test "${deployFlags[@]}"
