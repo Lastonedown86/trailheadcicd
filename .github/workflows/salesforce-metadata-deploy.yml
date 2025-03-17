@@ -1,4 +1,4 @@
-name: Validate Pull Request
+name: Salesforce Metadata Deploy
 
 on:
   workflow_call:
@@ -27,12 +27,12 @@ on:
           - RunSpecifiedTests
           - RunLocalTests
           - RunAllTestsInOrg
-    jobs:
-      validate:
-        runs-on: ubuntu-latest
-        environment:
-          name: ${{ inputs.environment-name }}
-        steps:
+  jobs:
+    validate:
+      runs-on: ubuntu-latest
+      environment:
+        name: ${{ inputs.environment-name }}
+      steps:
           - name: Checkout code
             uses: actions/checkout@v4
             with:
