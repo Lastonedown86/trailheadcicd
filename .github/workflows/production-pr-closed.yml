@@ -1,4 +1,4 @@
-name: Production PR Closed
+name: Deploy To Production
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ on:
       - master
 
 jobs:
-  deploy-production-merge:
+  deploy:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment:
@@ -33,7 +33,7 @@ jobs:
           echo y | sf plugins install sfdx-git-delta
           sf plugins
 
-      - name: "Authenticate to Production Org"
+      - name: "Authenticate to Org"
         run: |
           sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ secrets.SFDX_AUTH_URL }}")
 
@@ -42,7 +42,7 @@ jobs:
           mkdir changed-sources
           sf sgd:source:delta --from "HEAD~1" --output-dir changed-sources/ --generate-delta --source-dir force-app/
 
-      - name: "Deploy to Production"
+      - name: "Deploy"
         run: |
           deployFlags=(
               --manifest changed-sources/package/package.xml

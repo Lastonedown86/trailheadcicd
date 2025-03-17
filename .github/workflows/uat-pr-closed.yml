@@ -1,4 +1,4 @@
-name: UAT Push
+name: Deploy To UAT
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
       - uat
 
 jobs:
-  deploy-to-uat:
+  deploy:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment:
@@ -32,7 +32,7 @@ jobs:
           echo y | sf plugins install sfdx-git-delta
           sf plugins
 
-      - name: "Authenticate to UAT Org"
+      - name: "Authenticate to Org"
         run: |
           sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ secrets.SFDX_AUTH_URL }}")
 
@@ -40,8 +40,13 @@ jobs:
         run: |
           mkdir changed-sources
           sf sgd:source:delta --from "HEAD~1" --output-dir changed-sources/ --generate-delta --source-dir force-app/
-      
 
-      - name: "Deploy changes to UAT Org"
+      - name: "Deploy"
         run: |
-          sf project deploy start --manifest changed-sources/package/package.xml --post-destructive-changes changed-sources/destructiveChanges/destructiveChanges.xml --test-level RunLocalTests
+          deployFlags=(
+              --manifest changed-sources/package/package.xml
+              --post-destructive-changes changed-sources/destructiveChanges/destructiveChanges.xml
+              --test-level RunLocalTests
+              --verbose
+            )
+          sf project deploy start "${deployFlags[@]}"

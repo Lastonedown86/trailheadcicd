@@ -1,28 +1,15 @@
-name: Integration Push
+name: Deploy to SIT
 
 on:
-  push:
-    branches:
-      - integration
+  pull_request:
+    types: [closed]
 
 jobs:
-  merge_job:
-    # this job will only run if the PR has been merged
-    if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy on ${{ vars.ENVIRONMENT_NAME }}
-        uses: jawills/sf-deploy@v1.0
-        with:
-          SFDX_AUTH_URL`: ${{ secrets.SFDX_AUTH_URL }}
-          DRY_RUN: false
-          TEST_LEVEL: RunLocalTests
-          SFDX_AUTH_URL: ''
-  deploy-to-integration:
+  if: github.event.pull_request.merged == true
+  deploy:
     runs-on: ubuntu-latest
     environment:
-      name: integration
+      name: sit
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -52,6 +39,12 @@ jobs:
           mkdir changed-sources
           sf sgd:source:delta --from "HEAD~1" --output-dir changed-sources/ --generate-delta --source-dir force-app/
 
-      - name: "Deploy changes to Integration Org"
+      - name: "Deploy"
         run: |
-          sf project deploy start --manifest changed-sources/package/package.xml --post-destructive-changes changed-sources/destructiveChanges/destructiveChanges.xml --test-level RunLocalTests
+          deployFlags=(
+              --manifest changed-sources/package/package.xml
+              --post-destructive-changes changed-sources/destructiveChanges/destructiveChanges.xml
+              --test-level RunLocalTests
+              --verbose
+            )
+          sf project deploy start "${deployFlags[@]}"
