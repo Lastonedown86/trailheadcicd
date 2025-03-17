@@ -10,11 +10,11 @@
     </classAccesses>
     <classAccesses>
         <apexClass>TestClass</apexClass>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
         <apexClass>UToTheA</apexClass>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
     </classAccesses>
     <custom>true</custom>
     <userLicense>Salesforce</userLicense>
