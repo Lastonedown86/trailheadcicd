@@ -10,6 +10,8 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@v4
+      - name: Run Salesforce Code Analyzer
+        uses: forcedotcom/run-code-analyzer@v2.1.0
       - name: Validate on ${{ vars.ENVIRONMENT_NAME }}
         uses: ./.github/actions/validate-and-deploy
         with:
