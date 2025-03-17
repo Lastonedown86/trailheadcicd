@@ -10,7 +10,7 @@ jobs:
   validate:
     environment:
       name: production
-    uses: ./.github/workflows/salesforce-metadata-deploy.yml
+      uses: ./.github/workflows/salesforce-metadata-deploy.yml
     with:
       environment-name: ${{ env.ENVIRONMENT_NAME }}
       sfdx-auth-url: ${{ secrets.SFDX_AUTH_URL }}
