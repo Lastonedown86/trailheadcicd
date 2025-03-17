@@ -6,13 +6,10 @@ inputs:
     required: true
   SOURCE_DIRECTORY:
     description: 'Directory containing the source code'
-    required: true
   WAIT:
     description: 'Wait time for the deployment'
-    required: true
   TEST_LEVEL:
     description: 'Level of tests to run during deployment'
-    required: true
     default: 'RunLocalTests'
   DRY_RUN:
     description: 'Perform a dry run of the deployment'
