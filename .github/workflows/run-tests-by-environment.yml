@@ -26,8 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Running ${{ inputs.test-level}} on ${{ vars.ENVIRONMENT_NAME }}
-        uses: ./.github/actions/validate-and-deploy
+        uses: ./.github/actions/run-environment-tests
         with:
           SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
           TEST_LEVEL: ${{ inputs.test-level }}
-          DRY_RUN: true
