@@ -20,7 +20,7 @@ on:
         default: RunLocalTests
 
 jobs:
-  validate:
+  deploy:
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.environment-name }}
