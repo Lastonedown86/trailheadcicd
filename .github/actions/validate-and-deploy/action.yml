@@ -58,12 +58,6 @@ runs:
       uses: github/codeql-action/upload-sarif@v3
       with:
        sarif_file: changed-sources/apexScanResults.sarif
-    - name: Upload changed-sources folder as artifact
-      shell: bash
-      uses: actions/upload-artifact@v4
-      with:
-        name: changed-sources
-        path: changed-sources
     - name: Deploy to Environment
       shell: bash
       run: |
