@@ -39,6 +39,8 @@ runs:
       shell: bash
       run: |
         sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ inputs.SFDX_AUTH_URL }}")
+    - name: Run Salesforce Code Analyzer
+      uses: forcedotcom/run-code-analyzer@v2.1.0
     - name: Create delta packages for new, modified or deleted metadata
       shell: bash
       run: |
