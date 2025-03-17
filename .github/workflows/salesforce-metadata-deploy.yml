@@ -10,10 +10,6 @@ on:
         description: "Number of minutes to wait for command to complete and display results."
         type: number
         default: 30
-      SFDX_AUTH_URL:
-        description: "The auth url tied to your deployment environment"
-        type: string
-        required: true
       TEST_LEVEL:
         description: "Deployment Apex testing level."
         type: string
@@ -22,6 +18,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: production
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -43,7 +41,7 @@ jobs:
           sf plugins
 
       - name: Authenticate to Org
-        run: sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ inputs.SFDX_AUTH_URL }}")
+        run: sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ secrets.SFDX_AUTH_URL }}")
 
       - name: Create delta packages for new, modified or deleted metadata
         run: |
