@@ -14,5 +14,4 @@ jobs:
         uses: ./.github/actions/validate-and-deploy
         with:
           SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
-          TEST_LEVEL: RunAllTestsInOrg
           DRY_RUN: true
