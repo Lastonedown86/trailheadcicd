@@ -30,11 +30,14 @@ runs:
       run: |
         npm install -g @salesforce/cli
         sf --version
-    - name: Installing sfdx git delta
+    - name: Install sfdx git delta
       shell: bash
       run: |
-        echo y | sf plugins install sfdx-git-delta
+        echo y | sf plugins install sfdx-git-delta@latest
         sf plugins
+    - name: Install latest Saleforce Code Analyzer
+      shell: bash
+      run : sf plugins install code-analyzer@latest
     - name: Login to Environment
       shell: bash
       run: |
