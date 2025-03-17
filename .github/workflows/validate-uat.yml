@@ -1,0 +1,20 @@
+name: Validate UAT
+
+on:
+  pull_request:
+    branches:
+      - uat
+    paths:
+      - 'force-app/**'
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    environment: uat
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate on ${{ vars.ENVIRONMENT_NAME }}
+        uses: ./.github/actions/validate-and-deploy
+        with:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+          TEST_LEVEL: RunAllTestsInOrg
+          DRY_RUN: true

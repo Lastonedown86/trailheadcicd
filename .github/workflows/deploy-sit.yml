@@ -1,15 +1,17 @@
-name: Validate Production Pull Request
+name: Deploy to SIT
 
 on:
   pull_request:
+    types: [closed]
     branches:
-      - master
+      - sit
     paths:
       - 'force-app/**'
 jobs:
-  validate:
+  deploy:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    environment: production
+    environment: sit
     steps:
       - uses: actions/checkout@v4
       - name: Validate on ${{ vars.ENVIRONMENT_NAME }}
@@ -17,3 +19,4 @@ jobs:
         with:
           SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
           DRY_RUN: true
+          TEST_LEVEL: RunLocalTests
