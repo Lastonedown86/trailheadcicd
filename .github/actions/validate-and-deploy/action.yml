@@ -44,11 +44,6 @@ runs:
       run: |
         mkdir changed-sources
         sf sgd:source:delta --from "HEAD~1" --output-dir changed-sources/ --generate-delta --source-dir force-app/
-    - name: Upload changed-sources folder as artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: changed-sources
-        path: changed-sources
     - name: Deploy to Environment
       shell: bash
       run: |
@@ -61,4 +56,5 @@ runs:
           )
         if [ "${{ inputs.DRY_RUN }}" = "true" ]; then
            deployFlags+=( --dry-run )
+        fi
         sf project deploy start "${deployFlags[@]}"
