@@ -8,8 +8,11 @@ on:
 
 jobs:
   validate:
-    uses: ./.github/workflows/salesforce-metadata-deploy.yml
-    with:
-      environment-name: production
-      dry-run: true
-      test-level: RunAllTestsInOrg
+    environment: production
+    steps:
+      - name: Validate on ${{ vars.ENVIRONMENT_NAME }}
+        uses: ./.github/workflows/salesforce-metadata-deploy.yml
+        with:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+          DRY_RUN: true
+          TEST_LEVEL: RunAllTestsInOrg
