@@ -30,9 +30,6 @@ runs:
       run: |
         npm install -g @salesforce/cli
         sf --version
-    - name: Install SFDX scanner
-      shell: bash
-      run: sf plugins install @salesforce/sfdx-scanner
     - name: Installing sfdx git delta
       shell: bash
       run: |
@@ -42,17 +39,13 @@ runs:
       shell: bash
       run: |
         sf org login sfdx-url --set-default --sfdx-url-file <(echo "${{ inputs.SFDX_AUTH_URL }}")
+    - name: Run Salesforce Code Analyzer
+      uses: forcedotcom/run-code-analyzer@v2.1.0
     - name: Create delta packages for new, modified or deleted metadata
       shell: bash
       run: |
         mkdir changed-sources
         sf sgd:source:delta --from "HEAD~1" --output-dir changed-sources/ --generate-delta --source-dir force-app/
-    - name: Scan code
-      shell: bash
-      run: |
-        cd changed-sources
-        sf scanner run --format sarif --target './**/*.cls' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif' 
-        cd ..
     - name: Deploy to Environment
       shell: bash
       run: |
