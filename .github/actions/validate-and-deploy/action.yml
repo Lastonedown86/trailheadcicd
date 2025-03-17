@@ -53,11 +53,6 @@ runs:
         cd changed-sources
         sf scanner run --format sarif --target './**/*.cls' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif' 
         cd ..
-    - name: Upload SARIF file
-      shell: bash
-      uses: github/codeql-action/upload-sarif@v3
-      with:
-       sarif_file: changed-sources/apexScanResults.sarif
     - name: Deploy to Environment
       shell: bash
       run: |
