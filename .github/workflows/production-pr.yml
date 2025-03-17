@@ -10,6 +10,6 @@ jobs:
   validate:
     uses: ./.github/workflows/salesforce-metadata-deploy.yml
     with:
-      environment-name: ${{ env.ENVIRONMENT_NAME }}
+      environment-name: 'production'
       dry-run: true
       test-level: RunAllTestsInOrg
