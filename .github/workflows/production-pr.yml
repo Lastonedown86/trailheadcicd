@@ -52,4 +52,4 @@ jobs:
               --post-destructive-changes changed-sources/destructiveChanges/destructiveChanges.xml
               --verbose
             )
-          sf project validate "${deployFlags[@]}"
+          sf project deploy validate "${deployFlags[@]}"
