@@ -11,6 +11,6 @@ jobs:
     uses: ./.github/workflows/salesforce-metadata-deploy.yml
     with:
       environment-name: 'production'
-      sfdx-auth-url: "${{ secrets.SFDX_AUTH_URL }}"
+      sfdx-auth-url: ${{ secrets.SFDX_AUTH_URL }}
       dry-run: true
       test-level: 'RunAllTestsInOrg'
